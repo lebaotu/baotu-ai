@@ -1,0 +1,22 @@
+# Never commit ShareHTML publish keys or manage URLs
+.sharehtml-keys/
+**/.sharehtml-keys/
+publish.json
+**/publish.json
+**/.sharehtml-publish.json
+**/publication-intent.json
+**/public-release.json
+**/*manageUrl*
+**/*manageKey*
+*.key
+.env
+.env.*
+
+# Download leftovers and tooling
+headers.txt
+**/headers.txt
+.DS_Store
+Thumbs.db
+node_modules/
+*.pem
+*.p12
