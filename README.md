@@ -4,22 +4,22 @@ Bộ sưu tập sản phẩm dạy học của **Lê Bảo Tú**, giáo viên Ti
 
 Kho này là **nguồn lưu trữ** và **bản dự phòng** trên GitHub Pages. Bản đang dùng hằng ngày vẫn chạy trên sharehtml.org. Nếu trang đó gặp sự cố, mở link GitHub Pages bên dưới — mỗi sản phẩm vẫn chạy được, kể cả khi không có mạng (trừ vài tính năng cần Internet, xem ghi chú).
 
-- Bản dự phòng (GitHub Pages): https://lebaotu.github.io/Le-Bao-Tu-San-pham-AI/
+- Bản dự phòng (GitHub Pages): https://lebaotu.github.io/baotu-ai/
 - Sân chơi tri thức (bản chính): https://3w7n68w.sharehtml.org/
 
 ## Danh sách sản phẩm
 
 | STT | Tên | Bản chính | Bản dự phòng |
 | ---: | --- | --- | --- |
-| | [Sân chơi tri thức](https://lebaotu.github.io/Le-Bao-Tu-San-pham-AI/) (trang chủ bộ sưu tập) | [sharehtml](https://3w7n68w.sharehtml.org/) | [GitHub](https://lebaotu.github.io/Le-Bao-Tu-San-pham-AI/) |
-| 1 | Phi thuyền vũ trụ | [sharehtml](https://rfti9mv.sharehtml.org/) | [GitHub](https://lebaotu.github.io/Le-Bao-Tu-San-pham-AI/001-phi-thuyen-vu-tru/) |
-| 2 | Hái quả tri thức | [sharehtml](https://s1nzd90.sharehtml.org/) | [GitHub](https://lebaotu.github.io/Le-Bao-Tu-San-pham-AI/002-hai-qua-tri-thuc/) |
-| 3 | Vũ điệu tri thức | [sharehtml](https://ikldoug.sharehtml.org/) | [GitHub](https://lebaotu.github.io/Le-Bao-Tu-San-pham-AI/003-vu-dieu-tri-thuc/) |
-| 4 | Đua thuyền tri thức | [sharehtml](https://7h0h3x6.sharehtml.org/) | [GitHub](https://lebaotu.github.io/Le-Bao-Tu-San-pham-AI/004-dua-thuyen-tri-thuc/) |
-| 5 | Kéo co tri thức | [sharehtml](https://rnuhf7t.sharehtml.org/) | [GitHub](https://lebaotu.github.io/Le-Bao-Tu-San-pham-AI/005-keo-co-tri-thuc/) |
-| 6 | Chuyến đò tri ân | [sharehtml](https://s1j6i7m.sharehtml.org/) | [GitHub](https://lebaotu.github.io/Le-Bao-Tu-San-pham-AI/006-chuyen-do-tri-an/) |
-| 7 | Ngôi Sao Lớp Em | [sharehtml](https://rqlxac9.sharehtml.org/) | [GitHub](https://lebaotu.github.io/Le-Bao-Tu-San-pham-AI/007-ngoi-sao-lop-em/) |
-| 8 | Sổ Tay Phòng Tin Số | [sharehtml](https://7y5mw9a.sharehtml.org/) | [GitHub](https://lebaotu.github.io/Le-Bao-Tu-San-pham-AI/008-so-tay-phong-tin-so/) |
+| | [Sân chơi tri thức](https://lebaotu.github.io/baotu-ai/) (trang chủ bộ sưu tập) | [sharehtml](https://3w7n68w.sharehtml.org/) | [GitHub](https://lebaotu.github.io/baotu-ai/) |
+| 1 | Phi thuyền vũ trụ | [sharehtml](https://rfti9mv.sharehtml.org/) | [GitHub](https://lebaotu.github.io/baotu-ai/001-phi-thuyen-vu-tru/) |
+| 2 | Hái quả tri thức | [sharehtml](https://s1nzd90.sharehtml.org/) | [GitHub](https://lebaotu.github.io/baotu-ai/002-hai-qua-tri-thuc/) |
+| 3 | Vũ điệu tri thức | [sharehtml](https://ikldoug.sharehtml.org/) | [GitHub](https://lebaotu.github.io/baotu-ai/003-vu-dieu-tri-thuc/) |
+| 4 | Đua thuyền tri thức | [sharehtml](https://7h0h3x6.sharehtml.org/) | [GitHub](https://lebaotu.github.io/baotu-ai/004-dua-thuyen-tri-thuc/) |
+| 5 | Kéo co tri thức | [sharehtml](https://rnuhf7t.sharehtml.org/) | [GitHub](https://lebaotu.github.io/baotu-ai/005-keo-co-tri-thuc/) |
+| 6 | Chuyến đò tri ân | [sharehtml](https://s1j6i7m.sharehtml.org/) | [GitHub](https://lebaotu.github.io/baotu-ai/006-chuyen-do-tri-an/) |
+| 7 | Ngôi Sao Lớp Em | [sharehtml](https://rqlxac9.sharehtml.org/) | [GitHub](https://lebaotu.github.io/baotu-ai/007-ngoi-sao-lop-em/) |
+| 8 | Sổ Tay Phòng Tin Số | [sharehtml](https://7y5mw9a.sharehtml.org/) | [GitHub](https://lebaotu.github.io/baotu-ai/008-so-tay-phong-tin-so/) |
 
 Trên Sân chơi tri thức, mỗi thẻ có nút **Bản dự phòng** để chuyển nhanh sang bản còn lại.
 
