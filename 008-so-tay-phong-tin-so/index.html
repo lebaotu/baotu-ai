@@ -251,7 +251,7 @@ input[type=date].inp{color-scheme:var(--scheme)}
 /* ===== ROOM MAP ===== */
 .mapwrap{position:relative;padding:1.1rem 1.4rem 1.2rem;overflow:visible}
 .mapwrap:before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(160,175,255,.16) 1px,transparent 1.2px);background-size:1.4rem 1.4rem;mask-image:linear-gradient(#000,transparent 95%);-webkit-mask-image:linear-gradient(#000,transparent 95%);pointer-events:none}
-.stage{position:relative;display:flex;align-items:flex-end;justify-content:space-between;gap:1.2rem;margin:0 auto 1rem;max-width:72rem;width:100%}
+.stage{position:relative;display:flex;align-items:flex-end;justify-content:space-between;gap:1.2rem;margin:0 auto 1rem;max-width:78rem;width:100%}
 .gvslot{flex:none}
 .door{flex:none;width:5.6rem;height:4.2rem;border-radius:1rem .3rem .3rem 1rem;border:2px solid color-mix(in srgb,var(--tx) 22%,transparent);background:repeating-linear-gradient(90deg,color-mix(in srgb,var(--tx) 7%,transparent) 0 10px,transparent 10px 18px),linear-gradient(180deg,#f4efe4,#e4d5b8);display:grid;place-items:center;color:#5c4a2e;font:700 .68rem/1.2 var(--disp);letter-spacing:.08em;text-transform:uppercase;box-shadow:inset -8px 0 0 #0001,0 .4rem 1rem -0.6rem #0004;position:relative}
 .door:before{content:"";position:absolute;right:.7rem;top:50%;width:.7rem;height:.7rem;border-radius:50%;background:#c9a227;box-shadow:0 0 0 2px #fff6}
@@ -259,7 +259,7 @@ input[type=date].inp{color-scheme:var(--scheme)}
 .pick .door{width:3.6rem;height:2.3rem;font-size:.55rem}
 .board{flex:1;max-width:36rem;height:2.7rem;border-radius:.6rem;background:linear-gradient(180deg,#24315f,#152044);border:1px solid #8fa6ff44;display:grid;place-items:center;color:#e8eeff;font:600 .78rem/1 var(--disp);letter-spacing:.12em;text-transform:uppercase;box-shadow:0 0 2.4rem -.6rem #5aa9ff55,inset 0 0 1.5rem #5aa9ff22;position:relative}
 .board:after{content:"";position:absolute;left:10%;right:10%;bottom:-1.4rem;height:1.4rem;background:radial-gradient(ellipse at top,#5aa9ff33,transparent 70%)}
-.floor{position:relative;display:grid;gap:.38rem 1rem;justify-content:center;justify-items:center;margin:0 auto;width:min(72rem,100%)}.mapwrap{perspective:1600px}
+.floor{position:relative;display:grid;gap:.38rem .7rem;justify-content:center;justify-items:center;margin:0 auto;width:min(78rem,100%)}.mapwrap{perspective:1600px}
 .floor.tilt{transform:rotateX(22deg);transform-origin:50% 0;transform-style:preserve-3d}
 .seat{--c:#3ee59b;position:relative;width:5.2rem;height:4.45rem;border-radius:.85rem;background:var(--bg2);border:1px solid var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.28rem;transition:transform .35s var(--ease),border-color .25s,box-shadow .35s,background .25s;animation:pop .55s var(--ease) both;animation-delay:calc(var(--d,0)*8ms);box-shadow:0 .4rem 1rem -0.7rem rgba(30,40,80,.25)}
 body.theme-dark .seat{background:linear-gradient(165deg,rgba(150,165,255,.1),rgba(150,165,255,.03));box-shadow:none}
@@ -447,9 +447,9 @@ body.reduce *,body.reduce *:before,body.reduce *:after{animation:none!important;
  .hero,.g2,.g3,.kan{grid-template-columns:1fr}.g4{grid-template-columns:1fr 1fr}
  .lg-row{grid-template-columns:4.6rem 1fr auto;grid-template-areas:"d c s" "d l l" "t t t" "n n n";gap:.5rem .8rem}
  .lg-row>:nth-child(1){grid-area:d}.lg-row>:nth-child(2){grid-area:t}.lg-row>:nth-child(3){grid-area:c}.lg-row>:nth-child(4){grid-area:l}.lg-row>:nth-child(5){display:none}.lg-row>:nth-child(6){grid-area:n}.lg-row>:nth-child(7){grid-area:s}
- .seat{width:2.45rem;height:2.7rem;border-radius:.55rem}.seat .pc-ico{width:2.1rem;height:1.95rem}.seat .cmp{display:none}.seat .pc-keys{display:none}
- .seat.gv{width:7rem;height:2.7rem;gap:.4rem}.seat.gv span small{display:none}.seat.gv span b{font-size:.75rem}
- .floor{gap:.35rem .22rem}.aisle{width:.5rem}.mapwrap{padding:1rem .4rem}.floor.tilt{transform:rotateX(12deg)}.pick .seat{width:2.2rem;height:2rem}.pick .floor{gap:.25rem}.pick .aisle{width:.4rem}
+ .seat{width:2.15rem;height:2.55rem;border-radius:.5rem}.seat .pc-ico{width:1.95rem;height:1.85rem}.seat .cmp{display:none}.seat .pc-keys{display:none}
+ .seat.gv{width:6.4rem;height:2.55rem;gap:.3rem}.seat.gv span small{display:none}.seat.gv span b{font-size:.7rem}
+ .floor{gap:.28rem .16rem;width:100%}.aisle{width:.34rem;min-width:.34rem}.mapwrap{padding:1rem .35rem;overflow-x:auto}.floor.tilt{transform:rotateX(12deg)}.pick .seat{width:2rem;height:1.9rem}.pick .floor{gap:.2rem}.pick .aisle{width:.32rem}
  .issue-add{grid-template-columns:1fr 1fr}
  .fab{right:1.2rem;bottom:5.6rem}
  .modal{padding:.6rem}.mbox{max-height:calc(100vh - 1.2rem)}
@@ -3068,7 +3068,8 @@ const PROBLEMS={pc:['Không lên nguồn','Khởi động chậm','Treo, tự kh
 const SOURCES=['Ngân sách nhà trường','Phòng GD&ĐT cấp','Tài trợ, xã hội hoá','Điều chuyển','Khác'];
 const PERIODS={S:4,C:3};
 let S=null,DEV=null,_db=null,_saveT=null;
-function blank(){return{app:APP,v:1,settings:{id:'settings',mt:0,teacher:'Lê Bảo Tú',room:'Phòng Tin học',year:schoolYearOf(isoDate()),seats:40,cols:4,aisle:2,seatCats:['pc','monitor','keyboard','mouse'],sig:'',setup:false,tilt:false,order:null},tt:{id:'tt',mt:0,slots:{}},assets:{},issues:{},logs:{},events:{},classes:{}}}
+const DEFAULT_COLS=5,DEFAULT_AISLES=[1,3],LAYOUT_V=2;
+function blank(){return{app:APP,v:1,settings:{id:'settings',mt:0,teacher:'Lê Bảo Tú',room:'Phòng Tin học',year:schoolYearOf(isoDate()),seats:40,cols:DEFAULT_COLS,aisle:DEFAULT_AISLES.slice(),seatCats:['pc','monitor','keyboard','mouse'],sig:'',setup:false,tilt:false,order:null},tt:{id:'tt',mt:0,slots:{}},assets:{},issues:{},logs:{},events:{},classes:{}}}
 const COLS=['assets','issues','logs','events','classes'];
 function idbOpen(){return new Promise((res,rej)=>{if(!window.indexedDB)return rej('no');const r=indexedDB.open(DBN,1);r.onupgradeneeded=()=>r.result.createObjectStore('kv');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
 async function kvGet(k){if(_db)return new Promise(res=>{const q=_db.transaction('kv').objectStore('kv').get(k);q.onsuccess=()=>res(q.result);q.onerror=()=>res(null)});const v=localStorage.getItem(DBN+':'+k);return v?JSON.parse(v):null}
@@ -3086,7 +3087,7 @@ const live=col=>Object.values(S[col]).filter(r=>!r.del);
 const get=(col,id)=>{const r=S[col][id];return r&&!r.del?r:null};
 /* merge: bản ghi sửa sau thắng; các bước sửa chữa được hợp lại */
 function mergeData(d){const sum={assets:0,issues:0,logs:0,events:0,classes:0,settings:0,del:0};
- for(const k of ['settings','tt'])if(d[k]&&(d[k].mt||0)>(S[k].mt||0)){const keepSig=k==='settings'&&!d[k].sig&&S.settings.sig?S.settings.sig:null;S[k]={...S[k],...d[k]};if(keepSig)S.settings.sig=keepSig;sum.settings++}
+ for(const k of ['settings','tt'])if(d[k]&&(d[k].mt||0)>(S[k].mt||0)){const keepSig=k==='settings'&&!d[k].sig&&S.settings.sig?S.settings.sig:null;const inV=k==='settings'?(d[k].gridV||0):null;S[k]={...S[k],...d[k]};if(k==='settings')S.settings.gridV=inV;if(keepSig)S.settings.sig=keepSig;sum.settings++}
  for(const c of COLS){const src=d[c]||{};for(const id in src){const r=src[id],o=S[c][id];if(!r||!r.id)continue;
   if(!o){S[c][id]=r;if(r.del)continue;sum[c]++;continue}
   let win=(r.mt||0)>(o.mt||0)?r:o;
@@ -3097,14 +3098,20 @@ function exportData(kind){return{app:APP,kind,v:1,device:DEV.id,deviceName:DEV.n
 function validData(d){return d&&d.app===APP&&d.settings&&COLS.every(c=>!d[c]||typeof d[c]==='object')}
 
 function defaultOrder(n){return Array.from({length:n},(_,i)=>i+1)}
+function aisleList(st){st=st||S.settings;const cols=Math.max(1,+(st.cols)||DEFAULT_COLS);let a=st.aisle,list;if(Array.isArray(a))list=a.map(Number);else if(typeof a==='string'&&/[\s,]/.test(a))list=a.split(/[,\s]+/).map(Number);else if(a==null||a==='')list=[];else list=[+a];return[...new Set(list.filter(n=>n>=1&&n<cols))].sort((x,y)=>x-y)}
+function aisleValue(list){if(!list||!list.length)return 0;return list.length===1?list[0]:list.slice()}
+function parseAisleInput(s,cols){cols=Math.max(1,+(cols||S.settings.cols)||DEFAULT_COLS);const list=[...new Set(String(s==null?'':s).split(/[,\s]+/).map(Number).filter(n=>n>=1&&n<cols))].sort((x,y)=>x-y);return aisleValue(list)}
+function aisleInput(st){return aisleList(st).join(', ')}
+function applyDefaultGrid(){const n=+S.settings.seats||40;S.settings.cols=DEFAULT_COLS;S.settings.aisle=aisleValue(DEFAULT_AISLES);S.settings.order=defaultOrder(n);S.settings.gridV=LAYOUT_V}
 function seatOrder(){const n=+S.settings.seats||40;const o=S.settings.order;if(!Array.isArray(o)||o.length!==n)return defaultOrder(n);const set=new Set(o);if(set.size!==n||o.some(x=>x<1||x>n))return defaultOrder(n);return o.slice()}
 function swapSeats(a,b){a=+a;b=+b;if(!a||!b||a===b)return false;const o=seatOrder();const i=o.indexOf(a),j=o.indexOf(b);if(i<0||j<0)return false;[o[i],o[j]]=[o[j],o[i]];S.settings.order=o;S.settings.mt=now();save();return true}
-function resetLayout(){const n=+S.settings.seats||40;S.settings.cols=4;S.settings.aisle=Math.min(2,4);S.settings.order=defaultOrder(n);S.settings.mt=now();save()}
+function resetLayout(){applyDefaultGrid();S.settings.mt=now();save()}
 function migrateRoom(){let ch=false;
  if((S.settings.seatCats||[]).includes('headset')){S.settings.seatCats=S.settings.seatCats.filter(k=>k!=='headset');live('assets').filter(a=>a.cat==='headset'&&a.seat&&(/^TN-/.test(a.code||'')||/^Tai nghe /i.test(a.name||''))&&!issuesOf(a.id,false).length).forEach(a=>del('assets',a.id));ch=true}
- if((+S.settings.seats||40)===40&&!S.settings.order&&+S.settings.cols===8){S.settings.cols=4;S.settings.aisle=2;ch=true}
+ if((S.settings.gridV||0)<LAYOUT_V){if((+S.settings.seats||40)===40)applyDefaultGrid();else S.settings.gridV=LAYOUT_V;ch=true}
  if(ch){S.settings.mt=now();save()}
-}
+ return ch}
+
 /* ===== Trạng thái suy ra ===== */
 function issuesOf(aid,openOnly=true){return live('issues').filter(i=>i.aid===aid&&(!openOnly||i.status!=='done'))}
 function openIssues(){return live('issues').filter(i=>i.status!=='done')}
@@ -3128,7 +3135,7 @@ function seedRoom(o){const at=Date.now();const add=(rec)=>{const a=put('assets',
  const seats=[];for(let i=1;i<=o.seats;i++)seats.push(pad(i));if(o.gv)seats.push('GV');
  for(const s of seats)for(const k of o.seatCats){const c=CAT[k];add({cat:k,code:c.pre+'-'+s,name:c.s+' '+(s==='GV'?'giáo viên':s),seat:s})}
  for(const [k,n,q] of o.room){if(!q)continue;const many=q>1&&!['furniture','power'].includes(k);if(many){for(let j=0;j<q;j++)add({cat:k,code:nextCode(k),name:n+' '+(j+1)})}else add({cat:k,code:nextCode(k),name:n,qty:q})}
- S.settings.seats=o.seats;S.settings.cols=o.cols;S.settings.aisle=o.aisle;S.settings.seatCats=o.seatCats;S.settings.order=defaultOrder(o.seats);S.settings.setup=true;S.settings.mt=now();save()}
+ S.settings.seats=o.seats;S.settings.cols=o.cols;S.settings.aisle=Array.isArray(o.aisle)?aisleValue(aisleList({cols:o.cols,aisle:o.aisle})):parseAisleInput(o.aisle,o.cols);S.settings.seatCats=o.seatCats;S.settings.order=defaultOrder(o.seats);S.settings.gridV=LAYOUT_V;S.settings.setup=true;S.settings.mt=now();save()}
 
 /* ===== Màn hình chào ===== */
 const PROVERBS=[['Không thầy đố mày làm nên.','Tục ngữ'],['Muốn sang thì bắc cầu kiều,|Muốn con hay chữ thì yêu lấy thầy.','Ca dao'],['Một chữ cũng là thầy, nửa chữ cũng là thầy.','Tục ngữ'],['Tiên học lễ, hậu học văn.','Lời dạy của người xưa'],['Ăn quả nhớ kẻ trồng cây.','Tục ngữ'],['Uống nước nhớ nguồn.','Tục ngữ'],['Cơm cha, áo mẹ, chữ thầy,|Gắng công mà học có ngày thành danh.','Ca dao'],['Mồng một Tết cha, mồng hai Tết mẹ, mồng ba Tết thầy.','Tục ngữ'],['Trọng thầy mới được làm thầy.','Tục ngữ'],['Kính thầy, yêu bạn.','Lời dạy của người xưa'],['Vì lợi ích mười năm thì phải trồng cây,|Vì lợi ích trăm năm thì phải trồng người.','Chủ tịch Hồ Chí Minh'],['Học, học nữa, học mãi.','V. I. Lê-nin'],['Có công mài sắt, có ngày nên kim.','Tục ngữ'],['Người không học như ngọc không mài.','Tục ngữ']];
@@ -3209,11 +3216,11 @@ function activity(){const a=[];live('logs').forEach(l=>a.push({at:l.at||l.mt,ic:
  return a.sort((x,y)=>y.at-x.at)}
 
 /* ===== Sơ đồ phòng máy ===== */
-function floorHTML(mini,sel){const st=S.settings,cols=Math.max(1,+st.cols||4),ai=+st.aisle||0,n=+st.seats||40,order=seatOrder();
- const rows=Math.ceil(n/cols);const tpl=[];for(let c=1;c<=cols;c++){tpl.push(mini?'auto':'minmax(4.4rem,1fr)');if(c===ai&&c<cols)tpl.push(mini?'.7rem':'4.2rem')}
+function floorHTML(mini,sel){const st=S.settings,cols=Math.max(1,+st.cols||DEFAULT_COLS),ais=aisleList(st),n=+st.seats||40,order=seatOrder();
+ const rows=Math.ceil(n/cols);const tpl=[];for(let c=1;c<=cols;c++){tpl.push(mini?'auto':'minmax(4.2rem,1fr)');if(ais.includes(c)&&c<cols)tpl.push(mini?'.7rem':'3.2rem')}
  let cells='',i=0;
  for(let c=1;c<=cols;c++){for(let r=0;r<rows;r++){const idx=(c-1)*rows+r;if(idx<order.length)cells+=seatHTML(order[idx],i++,sel);else cells+='<span></span>'}
-  if(c===ai&&c<cols){for(let r=0;r<rows;r++)cells+='<span class="aisle" aria-hidden="true"></span>'}}
+  if(ais.includes(c)&&c<cols){for(let r=0;r<rows;r++)cells+='<span class="aisle" aria-hidden="true"></span>'}}
  const arr=U.arrange&&!mini&&!sel;const tilt=!mini&&st.tilt&&!arr;
  return `<div class="stage"><div class="gvslot">${seatHTML('GV',0,sel)}</div><div class="board"><span class="board-label">${mini?'Bảng':'Bảng lớp · Ti vi'}</span></div><div class="door" title="Cửa ra vào">${doorMark(mini)}</div></div><div class="floor ${tilt?'tilt':''}${arr?' arranging':''}" style="grid-template-columns:${tpl.join(' ')};grid-template-rows:repeat(${rows},auto);grid-auto-flow:column;width:min(72rem,100%)">${cells}</div>`}
 function pcIcon(label){return `<svg class="pc-ico" viewBox="0 0 64 60" aria-hidden="true"><rect class="pc-bezel" x="7" y="2" width="50" height="35" rx="5"/><rect class="pc-screen" x="11.5" y="6.5" width="41" height="26" rx="2.4"/><text class="pc-num" x="32" y="21.2" text-anchor="middle" dominant-baseline="middle">${esc(String(label))}</text><rect class="pc-neck" x="29" y="37" width="6" height="4" rx="1"/><rect class="pc-base" x="21" y="40.5" width="22" height="3.2" rx="1.4"/><rect class="pc-kb" x="13" y="46" width="38" height="10" rx="2"/><path class="pc-keys" d="M17 50h30M17 53.2h22"/></svg>`}
@@ -3486,7 +3493,7 @@ function cloudTouch(){if(cMerging||!DEV)return;cGen++;if(!cloudOn())return;let c
 function changed(s){return !!s&&Object.values(s).some(v=>v>0)}
 async function syncTarget(C){let got=null;
  for(let i=0;i<4;i++){const gen=cGen,pend=C.pending||C.lastRev==null;const p=await cloudCall('pull',{haveRev:C.lastRev||0},C);
-  if(!p.same&&p.data){let d=null;try{d=JSON.parse(p.data)}catch(e){}if(validData(d)){cMerging=true;let s;try{s=mergeData(d)}finally{cMerging=false}await flush();if(changed(s))got=s}}
+  if(!p.same&&p.data){let d=null;try{d=JSON.parse(p.data)}catch(e){}if(validData(d)){cMerging=true;let s,mig=false;try{s=mergeData(d);mig=migrateRoom()}finally{cMerging=false}if(mig)C.pending=true;await flush();if(changed(s)||mig)got=s||got}}
   if(!(C.pending||(pend&&live('assets').length+live('logs').length))){C.lastRev=p.rev;break}
   const r=await cloudCall('push',{baseRev:p.rev,data:JSON.stringify(exportData('sync'))},C);
   if(r.conflict){C.lastRev=null;continue}C.lastRev=r.rev;if(cGen===gen)C.pending=false;break}
@@ -3528,7 +3535,7 @@ function syncDlg(){const n=unsynced();
  $('#syncIn').onchange=e=>e.target.files[0]&&importSync(e.target.files[0])}
 async function syncExport(){await flush();const d=new Date();download(`DongBo-SoTayPhongTinSo-${slug(DEV.name||DEV.id)}-${isoDate(d)}-${pad(d.getHours())}${pad(d.getMinutes())}.json`,JSON.stringify(exportData('sync')),'application/json');DEV.lastExport=Date.now();saveDevice();toast('Đã xuất tệp đồng bộ','down');syncDlg()}
 async function importSync(f){let d;try{d=JSON.parse(await f.text())}catch(e){toast('Tệp không hợp lệ','alert','#ff6b8b');return}if(!validData(d)){toast('Đây không phải tệp của Sổ Tay Phòng Tin Số','alert','#ff6b8b');return}
- const s=mergeData(d);DEV.lastImport=Date.now();saveDevice();await flush();closeModal();refresh();
+ const s=mergeData(d);migrateRoom();DEV.lastImport=Date.now();saveDevice();await flush();closeModal();refresh();
  const L={assets:'thiết bị',issues:'sự cố',logs:'tiết dạy',events:'lịch sử',classes:'lớp',settings:'cài đặt',del:'mục đã xoá'};
  modal('Đã gộp dữ liệu',`<p class="hint">Từ ${esc(d.deviceName||('máy '+d.device))}, xuất lúc ${new Date(d.exported).toLocaleString('vi-VN')}.</p><div class="g4" style="margin-top:1rem">${Object.keys(L).map(k=>`<div class="card kpi" style="padding:1rem"><b class="num" style="font-size:1.8rem">${s[k]}</b><small>${L[k]} mới hoặc cập nhật</small></div>`).join('')}</div>`,`<button class="btn pri" data-a="closeModal">Xong</button>`)}
 
@@ -3537,14 +3544,14 @@ function parseClassRange(s){const out=[];String(s||'').split(/[,;\n]+/).map(x=>x
  if(m){const g=m[1],sep=m[2],a=m[3],b=m[4];if(/^\d+$/.test(a)&&/^\d+$/.test(b)){for(let i=+a;i<=+b&&i-+a<30;i++)out.push(g+sep+i)}else if(/^[A-Za-z]$/.test(a)&&/^[A-Za-z]$/.test(b)){for(let c=a.toUpperCase().charCodeAt(0);c<=b.toUpperCase().charCodeAt(0);c++)out.push(g+sep+String.fromCharCode(c))}else out.push(p)}else out.push(p)});return [...new Set(out)]}
 function setupWizard(){const st=S.settings;const room=ROOM_DEFAULT.map(r=>r.slice());
  const body=`<p class="hint" style="margin-bottom:1rem">App tạo sẵn sổ kiểm kê ban đầu theo thông tin dưới đây. Sau này thầy vẫn thêm, sửa, xoá từng thiết bị được.</p>
- <div class="g4"><label class="fl"><span>Số máy học sinh</span><input class="inp" id="swSeats" inputmode="numeric" value="${st.seats||40}"></label><label class="fl"><span>Số dãy máy (cột dọc)</span><input class="inp" id="swCols" inputmode="numeric" value="${st.cols||4}"></label><label class="fl"><span>Lối đi sau dãy thứ</span><input class="inp" id="swAisle" inputmode="numeric" value="${st.aisle??2}"></label><label class="fl"><span>Máy giáo viên</span><select class="sel" id="swGV"><option value="1">Có 1 máy</option><option value="0">Không</option></select></label></div>
+ <div class="g4"><label class="fl"><span>Số máy học sinh</span><input class="inp" id="swSeats" inputmode="numeric" value="${st.seats||40}"></label><label class="fl"><span>Số dãy máy (cột dọc)</span><input class="inp" id="swCols" inputmode="numeric" value="${st.cols||DEFAULT_COLS}"></label><label class="fl"><span>Lối đi sau dãy thứ</span><input class="inp" id="swAisle" value="${esc(aisleInput(st)||'1, 3')}" placeholder="1, 3"></label><label class="fl"><span>Máy giáo viên</span><select class="sel" id="swGV"><option value="1">Có 1 máy</option><option value="0">Không</option></select></label></div>
  <div class="fl" style="margin-top:1.1rem"><span>Mỗi máy gồm</span><div class="row" id="swCats" style="gap:.4rem">${['pc','monitor','keyboard','mouse','headset','cam'].map(k=>`<button class="chip ${st.seatCats.includes(k)?'on':''}" data-v="${k}">${IC[CAT[k].ic]}${CAT[k].s}</button>`).join('')}</div></div>
  <div class="g2" style="margin-top:1.1rem"><label class="fl"><span>Ngày nhận (ghi cho thiết bị hiện có)</span><input type="date" class="inp" id="swDate" value="${st.year.slice(0,4)}-08-15"></label><label class="fl"><span>Nguồn</span><input class="inp" id="swSrc" list="srcL2" placeholder="Có thể để trống"><datalist id="srcL2">${SOURCES.map(s=>`<option value="${s}">`).join('')}</datalist></label></div>
  <div class="fl" style="margin-top:1.1rem"><span>Thiết bị dùng chung trong phòng (đặt số lượng 0 nếu không có)</span><div class="tblwrap"><table class="tbl" id="swRoom"><tbody>${room.map((r,i)=>`<tr><td style="width:13rem"><select class="sel" data-i="${i}" data-f="0">${CATS.filter(c=>!['pc','keyboard','mouse','headset','cam'].includes(c.k)).map(c=>`<option value="${c.k}" ${c.k===r[0]?'selected':''}>${c.s}</option>`).join('')}</select></td><td><input class="inp" data-i="${i}" data-f="1" value="${esc(r[1])}"></td><td style="width:7rem"><input class="inp" data-i="${i}" data-f="2" inputmode="numeric" value="${r[2]}"></td></tr>`).join('')}</tbody></table></div></div>
  <label class="fl" style="margin-top:1.1rem"><span>Các lớp học ở phòng Tin (có thể nhập sau)</span><input class="inp" id="swCls" placeholder="Ví dụ: 3/1-3/8, 4/1-4/7, 5/1-5/6"></label>`;
  modal('Thiết lập phòng máy',body,`<button class="btn gl" data-a="closeModal">Để sau</button><button class="btn pri" id="swOk">${IC.spark}Tạo sổ kiểm kê</button>`,'wide');
  $('#swCats').onclick=e=>{const b=e.target.closest('.chip');if(b)b.classList.toggle('on')};
- $('#swOk').onclick=async()=>{const seats=clamp(+$('#swSeats').value||40,1,80),cols=clamp(+$('#swCols').value||4,1,12),aisle=clamp(+$('#swAisle').value||0,0,cols);const cats=$$('#swCats .chip.on').map(b=>b.dataset.v);if(!cats.length){toast('Chọn ít nhất một bộ phận cho mỗi máy','alert','#ffc14d');return}
+ $('#swOk').onclick=async()=>{const seats=clamp(+$('#swSeats').value||40,1,80),cols=clamp(+$('#swCols').value||DEFAULT_COLS,1,12),aisle=parseAisleInput($('#swAisle').value,cols);const cats=$$('#swCats .chip.on').map(b=>b.dataset.v);if(!cats.length){toast('Chọn ít nhất một bộ phận cho mỗi máy','alert','#ffc14d');return}
   if(live('assets').length&&!await confirmBox('Đã có thiết bị trong sổ','Sổ kiểm kê đã có '+live('assets').length+' mục. Tạo thêm theo thiết lập này?','Tạo thêm','pri'))return;
   const rm=room.map((r,i)=>[$(`#swRoom [data-i="${i}"][data-f="0"]`).value,$(`#swRoom [data-i="${i}"][data-f="1"]`).value.trim()||r[1],+$(`#swRoom [data-i="${i}"][data-f="2"]`).value||0]);
   parseClassRange($('#swCls').value).forEach(n=>addClass(n));
@@ -3562,14 +3569,15 @@ function viewSettings(){const t=U.setTab;const tabs=[['general','Chung'],['class
  <div class="row" style="margin-top:1.1rem"><input class="inp grow" id="clsAdd" placeholder="Thêm nhiều lớp: 3/1-3/8, 4/1-4/7, 5A-5D"><button class="btn pri" data-a="addClasses">${IC.plus}Thêm</button></div><p class="hint" style="margin-top:.6rem">Sĩ số dùng để điền sẵn "Số lượng" khi ghi tiết. Tệp sao lưu hoặc tệp đồng bộ của Ngôi Sao Lớp Em có thể dùng để lấy tên lớp và sĩ số.</p></div>`}
  if(t==='tt'){const cl=classList();const opt=v=>`<option value="">–</option>`+cl.map(c=>`<option value="${c.id}" ${v===c.id?'selected':''}>${esc(c.name)}</option>`).join('');
   h+=`<div class="card"><div class="ch"><h3>Thời khoá biểu phòng Tin</h3><span class="sp"></span><button class="btn qt sm" data-a="ttClear">${IC.trash}Xoá hết</button></div><p class="hint" style="margin-bottom:1rem">Cấp tiểu học: sáng 4 tiết, chiều 3 tiết. Điền lớp vào từng ô rồi lưu cho năm học này; năm học sau thầy lập lại thời khoá biểu mới. Khi ghi nhật ký, app tự chọn lớp theo thứ, buổi, tiết. ${cl.length?'':'Hãy thêm lớp ở mục Lớp học trước.'}</p><div class="ttg"><div></div>${[2,3,4,5,6,7].map(d=>`<div class="h">Thứ ${d}</div>`).join('')}${['S','C'].map(b=>Array.from({length:PERIODS[b]},(_,i)=>`<div class="h" style="text-align:left">${BUOI_N[b]} ${i+1}</div>${[2,3,4,5,6,7].map(d=>`<select class="sel" data-tt="${d}-${b}-${i+1}">${opt(S.tt.slots[d+'-'+b+'-'+(i+1)])}</select>`).join('')}`).join('')).join('')}</div></div>`}
- if(t==='room')h+=`<div class="card"><div class="g4"><label class="fl"><span>Số máy học sinh</span><input class="inp" data-setn="seats" value="${st.seats}"></label><label class="fl"><span>Số dãy máy (cột dọc)</span><input class="inp" data-setn="cols" value="${st.cols}"></label><label class="fl"><span>Lối đi sau dãy thứ</span><input class="inp" data-setn="aisle" value="${st.aisle}"></label><div class="fl"><span>Phối cảnh 3D</span><button class="chip ${st.tilt?'on':''}" data-a="toggleTilt">${st.tilt?'Đang bật':'Đang tắt'}</button></div></div><p class="hint" style="margin-top:1rem">Mặc định: 4 dãy dọc, mỗi dãy 10 máy; máy giáo viên bên trái, cửa ra vào bên phải. Muốn đổi chỗ từng máy, vào Sơ đồ phòng máy bấm "Bố trí lại" rồi kéo hoặc chạm để đổi. Đổi số máy ở đây chỉ đổi lưới. Muốn thêm thiết bị cho máy mới, dùng "Nhận thiết bị mới" hoặc chạy lại thiết lập.</p><div class="row" style="margin-top:1rem"><button class="btn gl" data-a="setup">${IC.spark}Chạy lại thiết lập phòng</button></div></div><div class="card mini">${floorHTML(true)}</div>`;
+ if(t==='room')h+=`<div class="card"><div class="g4"><label class="fl"><span>Số máy học sinh</span><input class="inp" data-setn="seats" value="${st.seats}"></label><label class="fl"><span>Số dãy máy (cột dọc)</span><input class="inp" data-setn="cols" value="${st.cols}"></label><label class="fl"><span>Lối đi sau dãy thứ</span><input class="inp" data-seta="aisle" value="${esc(aisleInput(st))}" placeholder="1, 3"></label><div class="fl"><span>Phối cảnh 3D</span><button class="chip ${st.tilt?'on':''}" data-a="toggleTilt">${st.tilt?'Đang bật':'Đang tắt'}</button></div></div><p class="hint" style="margin-top:1rem">Mặc định: 5 dãy dọc, mỗi dãy 8 máy (dãy 01–08 sát tường trái trong); lối đi sau dãy 1 và dãy 3; máy giáo viên bên trái, cửa ra vào bên phải. Muốn đổi chỗ từng máy, vào Sơ đồ phòng máy bấm "Bố trí lại" rồi kéo hoặc chạm để đổi. "Đặt lại mặc định" cho cùng một sơ đồ trên mọi máy. Đổi số máy ở đây chỉ đổi lưới. Muốn thêm thiết bị cho máy mới, dùng "Nhận thiết bị mới" hoặc chạy lại thiết lập.</p><div class="row" style="margin-top:1rem"><button class="btn gl" data-a="setup">${IC.spark}Chạy lại thiết lập phòng</button></div></div><div class="card mini">${floorHTML(true)}</div>`;
  if(t==='data'){const tot=COLS.reduce((s,c)=>s+live(c).length,0);h+=`<div class="g2"><div class="card"><h3>Sao lưu đầy đủ</h3><p class="hint" style="margin:.5rem 0 1rem">Tải toàn bộ dữ liệu (${tot} bản ghi) về máy, chép ra USB hoặc Drive để phòng khi đổi máy. ${S.settings.lastBackup?'Lần gần nhất: '+fmtTs(S.settings.lastBackup)+'.':'Chưa sao lưu lần nào.'}</p><div class="row"><button class="btn pri" data-a="backup">${IC.down}Tải tệp sao lưu</button>${cloudOn()?`<button class="btn gl" data-a="cloudBackup">${IC.cloud}Sao lưu lên Drive</button>`:''}</div></div>
  <div class="card"><h3>Khôi phục</h3><p class="hint" style="margin:.5rem 0 1rem">Thay toàn bộ dữ liệu trên máy này bằng tệp sao lưu. Muốn gộp hai máy, dùng Đồng bộ.</p><label class="btn gl">${IC.up}Chọn tệp sao lưu<input type="file" id="restoreIn" accept=".json" hidden></label></div></div>
  <div class="card"><h3>Đồng bộ giữa các máy</h3><p class="hint" style="margin:.5rem 0 1rem">Gộp dữ liệu giữa máy phòng Tin (không mạng) và bản trực tuyến bằng tệp USB hoặc tự động qua Google Drive.</p><button class="btn gl" data-a="syncDlg">${IC.sync}Mở Đồng bộ</button></div>
  <div class="card" style="border-color:#ff6b8b44"><h3>Xoá dữ liệu trên máy này</h3><p class="hint" style="margin:.5rem 0 1rem">Chỉ dùng khi muốn làm lại từ đầu. Hãy tải tệp sao lưu trước.</p><button class="btn bad" data-a="wipe">${IC.trash}Xoá toàn bộ</button></div>`}
  return h}
 function settingsAfter(){$$('[data-set]').forEach(i=>i.onchange=()=>{setSetting(i.dataset.set,i.value.trim());renderApp()});
- $$('[data-setn]').forEach(i=>i.onchange=()=>{const k=i.dataset.setn;setSetting(k,clamp(+i.value||0,k==='aisle'?0:1,k==='seats'?80:12));renderView(true)});
+ $$('[data-setn]').forEach(i=>i.onchange=()=>{const k=i.dataset.setn;setSetting(k,clamp(+i.value||0,1,k==='seats'?80:12));renderView(true)});
+ $$('[data-seta]').forEach(i=>i.onchange=()=>{setSetting('aisle',parseAisleInput(i.value,S.settings.cols));renderView(true)});
  $$('[data-size]').forEach(i=>i.onchange=()=>{const c=get('classes',i.dataset.size);c.size=+i.value||'';put('classes',c)});
  $$('[data-tt]').forEach(s=>s.onchange=()=>{if(s.value)S.tt.slots[s.dataset.tt]=s.value;else delete S.tt.slots[s.dataset.tt];S.tt.mt=now();save()});
  const r=$('#reduceFx');if(r)r.onchange=()=>{localStorage.setItem('stps-reduce',r.checked?'1':'0');document.body.classList.toggle('reduce',r.checked)};
@@ -3578,7 +3586,7 @@ function settingsAfter(){$$('[data-set]').forEach(i=>i.onchange=()=>{setSetting(
    d.classes.filter(c=>c&&c.name&&(!c.year||c.year===y)&&!c.del).forEach(c=>{const size=(c.students||[]).filter(s=>s.status!=='left'&&!s.del).length;const ex=classList().find(x=>fold(x.name)===fold(c.name));if(ex){if(size){ex.size=size;put('classes',ex)}}else{addClass(c.name,size);n++}});toast(`Đã lấy ${n} lớp mới, cập nhật sĩ số (năm học ${y})`,'users');renderView(true)}catch(e){toast('Không đọc được tệp của Ngôi Sao Lớp Em','alert','#ff6b8b')}};
  const ri=$('#restoreIn');if(ri)ri.onchange=async e=>{const f=e.target.files[0];if(!f)return;let d;try{d=JSON.parse(await f.text())}catch(x){}if(!validData(d)){toast('Tệp sao lưu không hợp lệ','alert','#ff6b8b');return}
   if(!await confirmBox('Khôi phục dữ liệu?','Toàn bộ dữ liệu hiện tại trên máy này sẽ được thay bằng tệp sao lưu xuất lúc '+new Date(d.exported).toLocaleString('vi-VN')+'.','Khôi phục'))return;
-  const b=blank();S={...b,settings:{...b.settings,...d.settings},tt:d.tt||b.tt,...Object.fromEntries(COLS.map(c=>[c,d[c]||{}]))};S.settings.mt=now();S.tt.mt=now();await flush();cloudTouch();toast('Đã khôi phục dữ liệu','check');renderApp()}}
+  const b=blank();S={...b,settings:{...b.settings,...d.settings},tt:d.tt||b.tt,...Object.fromEntries(COLS.map(c=>[c,d[c]||{}]))};migrateRoom();S.settings.mt=now();S.tt.mt=now();await flush();cloudTouch();toast('Đã khôi phục dữ liệu','check');renderApp()}}
 async function wipe(){if(!await confirmBox('Xoá toàn bộ dữ liệu?','Mọi tiết dạy, thiết bị, sự cố trên máy này sẽ mất. Không thể hoàn tác.','Xoá hết'))return;const keep=S.settings.teacher;S=blank();S.settings.teacher=keep;await flush();toast('Đã xoá dữ liệu','trash');show('welcome');renderWelcome()}
 function backup(){download(`SaoLuu-SoTayPhongTinSo-${isoDate()}.json`,JSON.stringify(exportData('backup')),'application/json');S.settings.lastBackup=Date.now();save();toast('Đã tải tệp sao lưu','down');if(U.view==='settings')renderView(true)}
 function guide(){modal('Hướng dẫn nhanh',`<ol class="steps"><li><b>Thiết lập phòng máy</b> một lần: số máy (mặc định 40 máy học sinh và 1 máy giáo viên), các bộ phận mỗi máy, thiết bị dùng chung. App tự tạo sổ kiểm kê.</li><li><b>Ghi tiết dạy</b> mỗi khi vào lớp: chọn lớp, bài dạy (có sẵn danh sách bài Tin học 3, 4, 5), số học sinh, tình trạng máy. Máy nào lỗi thì chạm vào máy đó trên sơ đồ. Ký một chạm bằng chữ ký đã lưu.</li><li><b>Sơ đồ phòng máy</b> cho biết ngay máy nào tốt, lỗi nhẹ, hỏng, đang sửa. Bấm vào một máy để xem từng bộ phận và lịch sử.</li><li><b>Kiểm kê tài sản</b>: nút <b>+</b> để ghi thiết bị mới nhận (ngày nhận, ngày ghi sổ tự lưu). Thiết bị hỏng có thể gửi sửa, sửa xong, thay mới hoặc thanh lý, lịch sử đều được giữ.</li><li><b>Báo cáo</b>: in sổ nhật ký đúng mẫu sổ giấy, biên bản kiểm kê, sổ theo dõi sửa chữa, hoặc xuất Excel.</li><li><b>Đồng bộ</b>: ở phòng Tin không có mạng thì xuất tệp ra USB, về nhà nhập vào bản trực tuyến để gộp. Khi có mạng, kết nối Google Drive để tự đồng bộ. Nhớ tải tệp sao lưu định kì.</li></ol>`,`<button class="btn pri" data-a="closeModal">Đã hiểu</button>`)}
@@ -3602,7 +3610,7 @@ const ACT={
  printLogs:()=>printLogs(),xlsLogs:()=>xlsLogs(),
  seat:d=>seatDrawer(d.n==='GV'?'GV':+d.n),toggleTilt:()=>{setSetting('tilt',!S.settings.tilt);renderView(true)},
  arrangeOn:()=>{U.arrange=true;U.arrSel=null;closeDrawer();go('map')},arrangeOff:()=>{U.arrange=false;U.arrSel=null;renderView(true);toast('Đã lưu bố trí sơ đồ')},
- arrangeReset:async()=>{if(!await confirmBox('Đặt lại sơ đồ mặc định?','Bốn dãy dọc, mỗi dãy 10 máy (01–10, 11–20, 21–30, 31–40). Máy giáo viên bên trái, cửa bên phải.','Đặt lại'))return;resetLayout();U.arrSel=null;renderView(true);toast('Đã đặt lại sơ đồ')},
+ arrangeReset:async()=>{if(!await confirmBox('Đặt lại sơ đồ mặc định?','Năm dãy dọc, mỗi dãy 8 máy (01–08 sát tường trái trong, rồi 09–16, 17–24, 25–32, 33–40). Lối đi sau dãy 1 và dãy 3. Máy giáo viên bên trái, cửa bên phải.','Đặt lại'))return;resetLayout();U.arrSel=null;renderView(true);toast('Đã đặt lại sơ đồ')},
  reportIssue:d=>reportIssue({aid:d.aid,seat:d.seat}),issue:d=>{closeModal();issueDrawer(d.id)},step:d=>stepDlg(d.id,d.t),delIssue:d=>delIssue(d.id),
  replace:d=>assetForm({replace:d.id}),
  asset:d=>assetDrawer(d.id),newAsset:d=>assetForm({seat:d.seat}),editAsset:d=>assetForm({id:d.id}),moveAsset:d=>moveAsset(d.id),retireAsset:d=>retireAsset(d.id),restoreAsset:d=>restoreAsset(d.id),delAsset:d=>delAsset(d.id),
