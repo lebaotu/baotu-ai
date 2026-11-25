@@ -546,6 +546,7 @@ body.theme-light .fab span{background:var(--card);color:var(--tx);border:1px sol
 body.theme-light .clist .chip input{background:var(--input);color:var(--tx)}
 body.theme-light .banner{color:#7c4a00;background:#fff6e0;border-color:#e8c56a}
 body.theme-light .banner.info{color:#1e40af;background:#e8f0fe;border-color:#93b4f0}
+.tkb-ban{margin:0 0 1.1rem;flex-wrap:wrap;align-items:flex-start}.tkb-ban .hint{max-width:42rem}
 body.theme-light .sigimg{filter:none}
 body.theme-light .kic,body.theme-light .feed .dot,body.theme-light .comp .ci,body.theme-light .cat .ci{
   background:color-mix(in srgb,var(--k,var(--c,var(--vio))) 16%,#eef3ff);color:var(--k,var(--c,var(--vio)));border:1px solid color-mix(in srgb,var(--k,var(--c,var(--vio))) 30%,transparent)}
@@ -3324,7 +3325,7 @@ async function kvGet(k){if(_db)return new Promise(res=>{const q=_db.transaction(
 async function kvSet(k,v){if(_db)return new Promise(res=>{const t=_db.transaction('kv','readwrite');t.objectStore('kv').put(v,k);t.oncomplete=()=>res(true);t.onerror=()=>res(false)});try{localStorage.setItem(DBN+':'+k,JSON.stringify(v))}catch(e){toast('Bộ nhớ trình duyệt đã đầy','alert','#ff6b8b')}}
 async function loadAll(){try{_db=await idbOpen()}catch(e){_db=null}
  S=await kvGet('state')||blank();const b=blank();for(const k in b)if(S[k]==null)S[k]=b[k];for(const k in b.settings)if(S.settings[k]==null)S.settings[k]=b.settings[k];
- DEV=await kvGet('device');if(!DEV){DEV={id:Math.random().toString(36).slice(2,6),name:'',created:Date.now()};await kvSet('device',DEV)}DEVID=DEV.id;migrateRoom();prefillTimetableIfEmpty()}
+ DEV=await kvGet('device');if(!DEV){DEV={id:Math.random().toString(36).slice(2,6),name:'',created:Date.now()};await kvSet('device',DEV)}DEVID=DEV.id;migrateRoom();ensureFullTimetable()}
 function save(){clearTimeout(_saveT);_saveT=setTimeout(flush,250);if(typeof cloudTouch==='function')cloudTouch()}
 async function flush(){clearTimeout(_saveT);await kvSet('state',S)}
 const saveDevice=()=>kvSet('device',DEV);
@@ -3378,11 +3379,31 @@ function classList(){return live('classes').sort((a,b)=>coll.compare(a.name,b.na
 function className(id){const c=get('classes',id);return c?c.name:(id||'')}
 const gradeOf=n=>{const m=String(n).match(/^\s*(\d)/);return m?+m[1]:0};
 /* Điền TKB mặc định chỉ khi thầy chưa từng sửa (tt.mt === 0). Không ghi đè dữ liệu đã có. */
-function classIdByName(name){const f=fold(name);const c=classList().find(x=>fold(x.name)===f);return c?c.id:''}
-function prefillTimetableIfEmpty(){if(!S||!S.tt)return 0;if((S.tt.mt||0)>0)return 0;if(typeof defaultTkbByName!=='function')return 0;
- const def=defaultTkbByName();const slots=S.tt.slots||(S.tt.slots={});let n=0;
- for(const k of Object.keys(def)){if(slots[k])continue;const id=classIdByName(def[k]);if(id){slots[k]=id;n++}}
- if(n){S.tt.auto=1;save()}return n}
+function classIdByName(name){const f=normClassName(name);const c=classList().find(x=>normClassName(x.name)===f);return c?c.id:''}
+/* Chuẩn hoá tên lớp giống công cụ bù nhật ký: "Lớp 5.1", "5-1" -> "5/1" */
+function normClassName(s){return fold(s).trim().replace(/^lop\s*/,'').replace(/[\s._\-\\]+/g,'/').replace(/\/+/g,'/').replace(/^\/|\/$/g,'')}
+function builtinClassId(name){return 'cbu'+normClassName(name).replace(/[^a-z0-9]+/g,'')}
+const CLASS_SIZE_DS={"3/1":35,"3/2":36,"3/3":33,"3/4":36,"3/5":33,"3/6":35,"3/7":33,"4/1":33,"4/2":36,"4/3":35,"4/4":34,"4/5":33,"4/6":33,"4/7":33,"4/8":33,"5/1":35,"5/2":30,"5/3":34,"5/4":33,"5/5":33,"5/6":32};
+function ensureBuiltinClass(name){const exId=classIdByName(name);if(exId)return exId;const id=builtinClassId(name);const cur=S.classes[id];if(cur&&!cur.del)return id;const size=CLASS_SIZE_DS[normClassName(name)]||'';put('classes',{id,name,grade:gradeOf(name),size});return id}
+let _tkbFillToast=false;
+function ensureFullTimetable(){if(!S||!S.tt)return 0;if(S.tt.skipBuiltinFill)return 0;if(typeof defaultTkbByName!=='function')return 0;
+ const setup=!!(S.settings&&S.settings.setup),hasData=live('classes').length>0||Object.keys(S.tt.slots||{}).length>0||live('logs').length>0;
+ if(!setup&&!hasData)return 0;
+ const def=defaultTkbByName();const slots=S.tt.slots||(S.tt.slots={});
+ const missing=Object.keys(def).filter(k=>!slots[k]);if(!missing.length)return 0;
+ const showNotice=((S.tt.mt||0)>0)||Object.keys(slots).length>0;
+ const prevSlots=JSON.parse(JSON.stringify(slots)),prevMt=S.tt.mt||0,createdIds=[];
+ for(const k of missing){const nm=def[k];const before=classIdByName(nm);const id=ensureBuiltinClass(nm);if(!before)createdIds.push(id);slots[k]=id}
+ S.tt.slots=slots;S.tt.mt=now();S.tt.auto=1;save();
+ if(showNotice&&DEV){DEV.tkbFillUndo={at:Date.now(),prevSlots,prevMt,createdIds,added:missing.length};DEV.tkbFillNotice=true;_tkbFillToast=true;saveDevice()}
+ return missing.length}
+function prefillTimetableIfEmpty(){return ensureFullTimetable()}
+function maybeToastTkbFill(){if(!_tkbFillToast)return;_tkbFillToast=false;toast('Đã nạp đủ 21 tiết theo lịch báo giảng','cal',null,{label:'Hoàn tác',onClick:()=>undoTkbFill(),ms:10000})}
+function dismissTkbFill(){if(DEV){delete DEV.tkbFillNotice;saveDevice()}refresh()}
+function undoTkbFill(){const u=DEV&&DEV.tkbFillUndo;if(!u){toast('Không còn lần nạp lịch báo giảng để hoàn tác','alert','#ffc14d');return}
+ S.tt.slots=JSON.parse(JSON.stringify(u.prevSlots||{}));S.tt.skipBuiltinFill=1;S.tt.mt=now();
+ (u.createdIds||[]).forEach(id=>{const used=Object.values(S.tt.slots||{}).includes(id);const logs=live('logs').some(l=>l.cls===id);if(!used&&!logs)del('classes',id)});
+ delete DEV.tkbFillUndo;delete DEV.tkbFillNotice;saveDevice();save();refresh();toast('Đã hoàn tác, thời khoá biểu trở về bản thầy đã lưu','hist')}
 
 /* ===== Thiết lập phòng ban đầu ===== */
 const ROOM_DEFAULT=[['tv','Tivi / Màn hình tương tác',1],['speaker','Loa',1],['net','Bộ chia mạng (switch)',2],['net','Bộ phát Wi-Fi',1],['power','Bộ lưu điện (UPS)',1],['power','Ổ cắm điện',10],['aircon','Máy điều hoà',2],['fan','Quạt treo tường',4],['printer','Máy in',1],['furniture','Bàn máy tính học sinh',20],['furniture','Ghế học sinh',40],['furniture','Bàn giáo viên',1]];
@@ -3452,13 +3473,23 @@ function go(v){if(v!=='map'){U.arrange=false;U.arrSel=null}U.view=v;closeDrawer(
 function ringSVG(v,tot,lbl){const R=52,C=2*Math.PI*R,p=tot?v/tot:0;return `<div class="ring"><svg viewBox="0 0 120 120"><defs><linearGradient id="gRing" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8b7bff"/><stop offset="1" stop-color="#2ee6d6"/></linearGradient></defs><circle class="tr" cx="60" cy="60" r="${R}"/><circle class="bar" cx="60" cy="60" r="${R}" stroke-dasharray="${C}" stroke-dashoffset="${C}" data-off="${C*(1-p)}"/></svg><div><b class="num" data-count="${v}">0</b><small>${lbl}</small></div></div>`}
 function animRings(){requestAnimationFrame(()=>requestAnimationFrame(()=>$$('.ring .bar').forEach(b=>b.style.strokeDashoffset=b.dataset.off)))}
 function teacherHi(){const t=S.settings.teacher||'';const ten=t.trim().split(/\s+/).pop()||'';return t?'Chào thầy '+ten:'Xin chào'}
-function nextLessons(){const t=isoDate(),g=dow(t);if(g===0)return[];const out=[];for(const b of ['S','C'])for(let p=1;p<=PERIODS[b];p++){const cid=S.tt.slots[(g+1)+'-'+b+'-'+p];if(cid&&get('classes',cid)){const done=live('logs').some(l=>l.date===t&&l.buoi===b&&+l.tiet===p);out.push({b,p,cid,done})}}return out}
+function dateHoliday(date){const d=String(date||'').slice(0,10);if(!d||typeof packHolidays!=='function')return null;
+ for(const h of packHolidays()){if(h.start&&h.end&&d>=h.start&&d<=h.end)return h;const dates=h.dates==null?[]:Array.isArray(h.dates)?h.dates:[h.dates];if(dates.map(String).includes(d))return h}return null}
+function isTeachingDate(date){const g=dow(date);if(g===0||g===6)return false;if(dateHoliday(date))return false;const tw=teachingWeek(date);return !!(tw&&tw.w&&!tw.holiday&&date>=tw.start&&date<=tw.end)}
+function periodsOn(date){const g=dow(date),out=[];if(g===0||g===6)return out;for(const b of ['S','C'])for(let p=1;p<=PERIODS[b];p++){const cid=S.tt.slots[(g+1)+'-'+b+'-'+p];if(!cid||!get('classes',cid))continue;const log=live('logs').find(l=>l.date===date&&l.buoi===b&&+l.tiet===p);out.push({b,p,cid,log,done:!!log,signed:!!(log&&typeof sigOf==='function'&&sigOf(log))})}return out}
+function nextTeachingDate(from){const weeks=yearWeeks(),end=weeks.length?weeks[weeks.length-1].end:addDays(from,90);for(let d=addDays(from,1),n=0;n<90&&d<=end;d=addDays(d,1),n++){if(isTeachingDate(d)&&periodsOn(d).length)return d}return ''}
+function nextLessons(){return periodsOn(isoDate())}
+function periodRowsHTML(date,items){return items.map(x=>{const les=suggestedLesson(x.cid,date),tm=periodClockLabel(x.b,x.p);const st=x.done?(x.signed?'Đã ghi nhật ký · Đã ký':'Đã ghi nhật ký · Chưa ký'):'Chưa ghi nhật ký';const right=x.done?`<span class="tag ${x.signed?'st-ok':'st-minor'}">${x.signed?'Đã ký':'Đã ghi'}</span>`:`<button class="btn pri sm" data-a="newLog" data-cls="${x.cid}" data-b="${x.b}" data-p="${x.p}"${date&&date!==isoDate()?` data-date="${date}"`:''}>Ghi</button>`;return `<div class="next"><div class="cls">${esc(className(x.cid))}</div><div class="grow"><b>Tiết ${x.p} · Buổi ${x.b==='S'?'sáng':'chiều'}${tm?' · '+tm:''}</b><small>${les?esc(les)+' · ':''}${st}</small></div>${right}</div>`}).join('')}
+function todayLessonsHTML(t){const nx=periodsOn(t);if(isTeachingDate(t)&&nx.length)return `<div class="nexts">${periodRowsHTML(t,nx)}</div>`;
+ const nxt=nextTeachingDate(t);if(!nxt)return '<p class="hint">Hôm nay không có tiết.</p>';
+ const lab='Tiết ngày học tiếp theo · '+thuName(nxt)+' '+vnDate(nxt)+(weekLabel(nxt)?' · '+weekLabel(nxt):'');
+ return `<p class="hint" style="margin:0 0 .7rem">Hôm nay không có tiết.</p><div class="eyebrow" style="margin:0 0 .5rem">${esc(lab)}</div><div class="nexts">${periodRowsHTML(nxt,periodsOn(nxt))}</div>`}
+function tkbFillBanner(){if(!(DEV&&DEV.tkbFillNotice&&DEV.tkbFillUndo))return '';const n=DEV.tkbFillUndo.added||21;return `<div class="banner info tkb-ban">${IC.cal}<div class="grow"><b>Đã nạp đủ 21 tiết theo lịch báo giảng</b><p class="hint" style="margin:.25rem 0 0">Các ô thầy đã nhập được giữ nguyên. Đã bổ sung ${n} tiết còn thiếu, dùng từ 07/09/2026 đến hết năm học.</p></div><button class="btn gl sm" data-a="undoTkbFill">Hoàn tác</button><button class="btn qt ic sm" data-a="dismissTkbFill" aria-label="Đóng">${IC.x}</button></div>`}
 function viewDash(){const r=roomStats(),t=isoDate(),tw=teachingWeek(t),wlab=weekLabel(tw||t);const logs=live('logs');const wk=tw&&!tw.holiday?logs.filter(l=>l.date>=tw.start&&l.date<=tw.end).length:0;const oi=openIssues();const assets=live('assets').filter(a=>!a.retired);
- const nx=nextLessons();
  const allW=yearWeeks();const curN=(tw&&tw.w)||(allW[0]&&allW[0].w)||1;const weeks=allW.filter(w=>w.w<=curN).slice(-8).map(w=>({w,a:w.start,lab:'T'+w.w,n:logs.filter(l=>l.date>=w.start&&l.date<=w.end).length}));const mx=Math.max(1,...weeks.map(w=>w.n));
  const feed=activity().slice(0,7);
- return `<div class="hero"><div class="card hello"><span class="eyebrow">${thuName(t)}, ${vnDate(t)}${wlab?' · '+esc(wlab):''}</span><h2>${esc(teacherHi())}</h2><p>${wk?`${wlab||'Tuần này'} thầy đã ghi <b>${wk}</b> tiết dạy tại ${esc(S.settings.room.toLowerCase())}.`:(wlab||'Tuần này')+' chưa có tiết nào được ghi. Bấm "Ghi tiết dạy" khi vào lớp nhé.'}</p>${proverb()}</div>
- <div class="card"><div class="ch"><h3>Tiết hôm nay</h3>${wlab?`<span class="tag nodot wk-tag">${esc(wlab)}</span>`:''}<span class="sp"></span><button class="btn qt sm" data-a="go" data-v="settings" data-tab="tt">${IC.cal}Thời khoá biểu</button></div><div class="nexts">${nx.length?nx.slice(0,4).map(x=>{const les=suggestedLesson(x.cid,t);const tm=periodClockLabel(x.b,x.p);return `<div class="next"><div class="cls">${esc(className(x.cid))}</div><div class="grow"><b>Tiết ${x.p} · Buổi ${x.b==='S'?'sáng':'chiều'}${tm?' · '+tm:''}</b><small>${les?esc(les)+' · ':''}${x.done?'Đã ghi nhật ký':'Chưa ghi nhật ký'}</small></div>${x.done?`<span class="tag st-ok">Đã ghi</span>`:`<button class="btn pri sm" data-a="newLog" data-cls="${x.cid}" data-b="${x.b}" data-p="${x.p}">Ghi</button>`}</div>`}).join(''):`<p class="hint">${dow(t)===0?'Hôm nay là Chủ nhật.':'Chưa có thời khoá biểu cho hôm nay. Nhập thời khoá biểu để app tự điền lớp, tiết khi ghi nhật ký.'}</p>`}</div></div></div>
+ return `${tkbFillBanner()}<div class="hero"><div class="card hello"><span class="eyebrow">${thuName(t)}, ${vnDate(t)}${wlab?' · '+esc(wlab):''}</span><h2>${esc(teacherHi())}</h2><p>${wk?`${wlab||'Tuần này'} thầy đã ghi <b>${wk}</b> tiết dạy tại ${esc(S.settings.room.toLowerCase())}.`:(wlab||'Tuần này')+' chưa có tiết nào được ghi. Bấm "Ghi tiết dạy" khi vào lớp nhé.'}</p>${proverb()}</div>
+ <div class="card"><div class="ch"><h3>Tiết hôm nay</h3>${wlab?`<span class="tag nodot wk-tag">${esc(wlab)}</span>`:''}<span class="sp"></span><button class="btn qt sm" data-a="go" data-v="settings" data-tab="tt">${IC.cal}Thời khoá biểu</button></div>${todayLessonsHTML(t)}</div></div>
  <div class="g4">${[['Máy sẵn sàng',r.ready,'/ '+r.total+' máy','#3ee59b','monitor'],['Tiết tuần này',wk,'tổng '+logs.length+' tiết đã ghi','#8b7bff','book'],['Sự cố đang mở',oi.length,oi.filter(i=>i.status==='repair').length+' thiết bị đang sửa','#ff6b8b','wrench'],['Thiết bị quản lí',assets.reduce((a,x)=>a+(+x.qty||1),0),CATS.filter(c=>assets.some(a=>a.cat===c.k)).length+' loại thiết bị','#2ee6d6','box']].map(k=>`<div class="card kpi hov" style="--k:${k[3]}"><span class="kic">${IC[k[4]]}</span><span class="eyebrow" style="color:var(--mu)">${k[0]}</span><b class="num" data-count="${k[1]}">0</b><small>${k[2]}</small></div>`).join('')}</div>
  <div class="g2" style="grid-template-columns:1.25fr 1fr"><div class="card mini" data-a="go" data-v="map" style="cursor:pointer"><div class="ch"><h3>Sơ đồ phòng máy</h3><span class="sp"></span><span class="btn qt sm">Mở sơ đồ ${IC.arrow}</span></div><div class="row" style="align-items:center;gap:1.6rem;flex-wrap:nowrap"><div class="grow" style="min-width:0">${floorHTML(true)}</div><div class="row" style="flex-direction:column;align-items:stretch;gap:1rem;flex:none">${ringSVG(r.ready,r.total,'sẵn sàng')}<div class="legend">${['ok','minor','repair','broken'].map(s=>`<div class="st-${s}"><i></i>${ST[s]}<b>${r[s]}</b></div>`).join('')}</div></div></div></div>
  <div class="card"><div class="ch"><h3>Số tiết theo tuần</h3><span class="sp"></span><span class="eyebrow" style="color:var(--mu)">Theo khung năm học</span></div><div class="bars">${weeks.map((w,i)=>`<div><em>${w.n||''}</em><i style="height:${Math.max(2,w.n/mx*100)}%;animation-delay:${i*.06}s"></i><small>${esc(w.lab)}</small></div>`).join('')}</div></div></div>
@@ -3576,7 +3607,7 @@ function lessonsFor(cid){return lessonsForGrade(gradeOf(className(cid)))}
 function nextLessonFor(cid){const ls=live('logs').filter(l=>l.cls===cid&&l.lesson).sort((a,b)=>b.date.localeCompare(a.date)||b.at-a.at);if(!ls.length)return null;const cur=lessonEntries(gradeOf(className(cid)));const tw=teachingWeek(ls[0].date);let k=tw&&tw.w?cur.findIndex(e=>e.week===tw.w):-1;if(k<0)k=cur.findIndex(e=>e.lesson===ls[0].lesson);return{last:ls[0].lesson,next:k>=0&&k<cur.length-1?cur[k+1].lesson:null}}
 function applySuggestedLesson(f,force){if(!f._new&&!force)return;if(f._lessonEdited&&!force)return;const s=f.cls?suggestedLesson(f.cls,f.date):'';f.lesson=s;f._autoLesson=s||''}
 function guessCount(cid){const c=get('classes',cid);const last=live('logs').filter(l=>l.cls===cid).sort((a,b)=>b.date.localeCompare(a.date))[0];return last?last.count:(c&&c.size)||''}
-function newLog(o={}){const t=isoDate(),h=new Date().getHours();const b=o.b||(h<12?'S':'C');let p=o.p?+o.p:0;
+function newLog(o={}){const t=o.date||isoDate(),h=new Date().getHours();const b=o.b||(h<12?'S':'C');let p=o.p?+o.p:0;
  if(!p){const used=live('logs').filter(l=>l.date===t&&l.buoi===b).map(l=>+l.tiet);p=1;while(used.includes(p)&&p<PERIODS[b])p++}
  let cls=o.cls||S.tt.slots[thuNum(t)+'-'+b+'-'+p]||'';
  LF={_new:true,id:'',date:t,buoi:b,tiet:p,cls,lesson:'',count:cls?guessCount(cls):'',ok:true,rows:[],cond:'',note:'',sig:S.settings.sig?'default':'',issues:[],_autoLesson:'',_lessonEdited:false};applySuggestedLesson(LF,true);renderLogForm()}
@@ -3622,7 +3653,7 @@ function saveLog(){lfSync();const f=LF;if(!f.cls){toast('Chọn lớp đã dạy
  rec.issues=ids;if(ids.length)rec.ok=false;put('logs',rec);closeModal();
  toast((f._new?'Đã ghi tiết ':'Đã cập nhật tiết ')+f.tiet+' lớp '+className(f.cls)+(dup?' (lưu ý: đã có tiết khác cùng giờ)':''),'check');refresh()}
 async function delLog(id){if(!await confirmBox('Xoá tiết dạy?','Tiết này sẽ bị xoá khỏi sổ nhật ký. Các sự cố đã ghi trong tiết vẫn được giữ trong mục Hư hỏng, sửa chữa.','Xoá'))return;del('logs',id);refresh();toast('Đã xoá tiết dạy','trash')}
-function addClass(name,size){const ex=classList().find(c=>fold(c.name)===fold(name));if(ex)return ex;const c=put('classes',{name,grade:gradeOf(name),size:size||''});prefillTimetableIfEmpty();return c}
+function addClass(name,size){const ex=classList().find(c=>normClassName(c.name)===normClassName(name));if(ex)return ex;const c=put('classes',{name,grade:gradeOf(name),size:size||''});prefillTimetableIfEmpty();return c}
 /* --- chữ ký --- */
 function sigPad(done){modal('Ký xác nhận',`<p class="hint" style="margin-bottom:.8rem">Ký bằng ngón tay, bút cảm ứng hoặc chuột trong khung trắng.</p><canvas class="sigpad" id="sigCv"></canvas><label class="row" style="margin-top:.8rem;gap:.5rem;color:var(--tx2)"><input type="checkbox" id="sigKeep" checked> Lưu làm chữ ký mặc định cho các tiết sau</label>`,`<button class="btn qt" id="sigClr">Ký lại</button><span class="sp"></span><button class="btn gl" data-a="closeModal">Huỷ</button><button class="btn pri" id="sigOk">${IC.check}Xác nhận</button>`,'sm');
  const cv=$('#sigCv');const r=cv.getBoundingClientRect();const dpr=window.devicePixelRatio||1;cv.width=r.width*dpr;cv.height=r.height*dpr;const g=cv.getContext('2d');g.scale(dpr,dpr);g.lineCap='round';g.lineJoin='round';g.strokeStyle='#14215a';
@@ -3820,7 +3851,7 @@ function setupWizard(){const st=S.settings;const room=ROOM_DEFAULT.map(r=>r.slic
   const rm=room.map((r,i)=>[$(`#swRoom [data-i="${i}"][data-f="0"]`).value,$(`#swRoom [data-i="${i}"][data-f="1"]`).value.trim()||r[1],+$(`#swRoom [data-i="${i}"][data-f="2"]`).value||0]);
   parseClassRange($('#swCls').value).forEach(n=>addClass(n));
   seedRoom({seats,cols,aisle,gv:$('#swGV').value==='1',seatCats:cats,received:$('#swDate').value||isoDate(),source:$('#swSrc').value.trim(),room:rm});
-  closeModal();toast('Đã tạo sổ kiểm kê với '+live('assets').length+' thiết bị','spark');if(U.screen!=='app'){show('app')}U.view='map';renderApp()}}
+  ensureFullTimetable();closeModal();toast('Đã tạo sổ kiểm kê với '+live('assets').length+' thiết bị','spark');maybeToastTkbFill();if(U.screen!=='app'){show('app')}U.view='map';renderApp()}}
 function viewSettings(){const t=U.setTab;const tabs=[['general','Chung'],['classes','Lớp học'],['tt','Thời khoá biểu'],['room','Phòng máy'],['data','Dữ liệu']];
  let h=`<div class="tabs">${tabs.map(([k,n])=>`<button class="${t===k?'on':''}" data-a="setTab" data-v="${k}">${n}</button>`).join('')}</div>`;
  const st=S.settings;
@@ -3831,7 +3862,7 @@ function viewSettings(){const t=U.setTab;const tabs=[['general','Chung'],['class
  <label class="row" style="gap:.6rem;color:var(--tx2);margin-top:1rem"><input type="checkbox" id="reduceFx" ${localStorage.getItem('stps-reduce')==='1'?'checked':''}> Giảm chuyển động (cho máy yếu)</label></div>`;
  if(t==='classes'){const cl=classList();h+=`<div class="card"><div class="ch"><h3>Danh sách lớp (${cl.length})</h3><span class="sp"></span><label class="btn gl sm">${IC.up}Lấy lớp từ Ngôi Sao Lớp Em<input type="file" id="imp007" accept=".json" hidden></label></div>${cl.length?`<div class="clist">${cl.map(c=>`<span class="chip"><b>${esc(c.name)}</b><input data-size="${c.id}" value="${c.size||''}" placeholder="sĩ số" inputmode="numeric" title="Sĩ số"><button data-a="delClass" data-id="${c.id}" aria-label="Xoá lớp">${IC.x}</button></span>`).join('')}</div>`:'<p class="hint">Chưa có lớp nào.</p>'}
  <div class="row" style="margin-top:1.1rem"><input class="inp grow" id="clsAdd" placeholder="Thêm nhiều lớp: 3/1-3/8, 4/1-4/7, 5A-5D"><button class="btn pri" data-a="addClasses">${IC.plus}Thêm</button></div><p class="hint" style="margin-top:.6rem">Sĩ số dùng để điền sẵn "Số lượng" khi ghi tiết. Tệp sao lưu hoặc tệp đồng bộ của Ngôi Sao Lớp Em có thể dùng để lấy tên lớp và sĩ số.</p></div>`}
- if(t==='tt'){h+=ttWeekHTML()}
+ if(t==='tt'){h+=(DEV&&DEV.tkbFillUndo?`<div class="banner info tkb-ban" style="margin-bottom:1rem">${IC.cal}<div class="grow"><b>Đã nạp đủ 21 tiết theo lịch báo giảng</b><p class="hint" style="margin:.25rem 0 0">Các ô thầy tự nhập được giữ nguyên. Có thể hoàn tác lần nạp này.</p></div><button class="btn gl sm" data-a="undoTkbFill">Hoàn tác</button></div>`:'')+ttWeekHTML()}
  if(t==='room')h+=`<div class="card"><div class="g4"><label class="fl"><span>Số máy học sinh</span><input class="inp" data-setn="seats" value="${st.seats}"></label><label class="fl"><span>Số dãy máy (cột dọc)</span><input class="inp" data-setn="cols" value="${st.cols}"></label><label class="fl"><span>Lối đi sau dãy thứ</span><input class="inp" data-seta="aisle" value="${esc(aisleInput(st))}" placeholder="1, 3"></label><div class="fl"><span>Phối cảnh 3D</span><button class="chip ${st.tilt?'on':''}" data-a="toggleTilt">${st.tilt?'Đang bật':'Đang tắt'}</button></div></div><p class="hint" style="margin-top:1rem">Mặc định: 5 dãy dọc, mỗi dãy 8 máy (dãy 01–08 sát tường trái trong); lối đi sau dãy 1 và dãy 3; máy giáo viên bên trái, cửa ra vào bên phải. Muốn đổi chỗ từng máy, vào Sơ đồ phòng máy bấm "Bố trí lại" rồi kéo hoặc chạm để đổi. "Đặt lại mặc định" cho cùng một sơ đồ trên mọi máy. Đổi số máy ở đây chỉ đổi lưới. Muốn thêm thiết bị cho máy mới, dùng "Nhận thiết bị mới" hoặc chạy lại thiết lập.</p><div class="row" style="margin-top:1rem"><button class="btn gl" data-a="setup">${IC.spark}Chạy lại thiết lập phòng</button></div></div><div class="card mini">${floorHTML(true)}</div>`;
  if(t==='data'){const tot=COLS.reduce((s,c)=>s+live(c).length,0);h+=`<div class="g2"><div class="card"><h3>Sao lưu đầy đủ</h3><p class="hint" style="margin:.5rem 0 1rem">Tải toàn bộ dữ liệu (${tot} bản ghi) về máy, chép ra USB hoặc Drive để phòng khi đổi máy. ${S.settings.lastBackup?'Lần gần nhất: '+fmtTs(S.settings.lastBackup)+'.':'Chưa sao lưu lần nào.'}</p><div class="row"><button class="btn pri" data-a="backup">${IC.down}Tải tệp sao lưu</button>${cloudOn()?`<button class="btn gl" data-a="cloudBackup">${IC.cloud}Sao lưu lên Drive</button>`:''}</div></div>
  <div class="card"><h3>Khôi phục</h3><p class="hint" style="margin:.5rem 0 1rem">Thay toàn bộ dữ liệu trên máy này bằng tệp sao lưu. Muốn gộp hai máy, dùng Đồng bộ.</p><label class="btn gl">${IC.up}Chọn tệp sao lưu<input type="file" id="restoreIn" accept=".json" hidden></label></div></div>
@@ -3866,13 +3897,13 @@ function guide(){modal('Hướng dẫn nhanh',`<ol class="steps"><li><b>Thiết 
 function refresh(){if(U.screen==='app')renderApp();else if(U.screen==='welcome')renderWelcome();const d=$('#drawer');if(d&&U.mapSel!=null&&U.view==='map'&&!$('#modal'))seatDrawer(U.mapSel)}
 async function copyText(t,msg){try{await navigator.clipboard.writeText(t);toast(msg,'copy')}catch(e){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove();toast(msg,'copy')}}
 const ACT={
- enter:()=>{if(!S.settings.setup&&!live('assets').length){show('app');U.view='dash';renderApp();setupWizard();return}show('app');renderApp()},
+ enter:()=>{if(!S.settings.setup&&!live('assets').length){show('app');U.view='dash';renderApp();setupWizard();return}show('app');renderApp();maybeToastTkbFill()},
  home:()=>{closeDrawer();show('welcome');renderWelcome()},guide,
  fullscreen:()=>{if(document.fullscreenElement)document.exitFullscreen();else document.documentElement.requestFullscreen?.().catch(()=>{})},
  closeModal:()=>closeModal(),closeDrawer,
  go:d=>{if(d.tab)U.setTab=d.tab;go(d.v)},
  setup:()=>setupWizard(),
- newLog:d=>newLog({cls:d.cls,b:d.b,p:d.p}),editLog:d=>editLog(d.id),delLog:d=>{closeModal();delLog(d.id)},
+ newLog:d=>newLog({cls:d.cls,b:d.b,p:d.p,date:d.date}),undoTkbFill:()=>undoTkbFill(),dismissTkbFill:()=>dismissTkbFill(),editLog:d=>editLog(d.id),delLog:d=>{closeModal();delLog(d.id)},
  lfSig:d=>{lfSync();if(d.v==='clear'){LF.sig='';renderLogForm()}else if(d.v==='default'){LF.sig='default';renderLogForm()}else{const keep=LF;sigPad((data,def)=>{LF=keep;if(def){setSetting('sig',data);LF.sig='default'}else LF.sig=data;renderLogForm()})}},
  lfShared:()=>{lfSync();const as=live('assets').filter(a=>!a.seat&&!a.retired);if(!as.length){toast('Chưa có thiết bị dùng chung trong sổ','alert','#ffc14d');return}LF.rows.push({seat:'_',aid:as[0].id,title:'',sev:'broken'});renderLogForm()},
  lfRowDel:d=>{lfSync();LF.rows.splice(+d.i,1);renderLogForm()},
